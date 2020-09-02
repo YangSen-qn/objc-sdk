@@ -16,7 +16,7 @@
 @property(nonatomic, strong)QNUploadSingleRequestMetrics *requestMetrics;
 @property(nonatomic, strong)NSURLSessionDataTask *uploadTask;
 @property(nonatomic, strong)NSMutableData *responseData;
-@property(nonatomic,  copy)void(^progress)(long long totalBytesWritten, long long totalBytesExpectedToWrite);
+@property(nonatomic,   copy)void(^progress)(long long totalBytesWritten, long long totalBytesExpectedToWrite);
 @property(nonatomic,  copy)QNRequestClientCompleteHandler complete;
 
 @end

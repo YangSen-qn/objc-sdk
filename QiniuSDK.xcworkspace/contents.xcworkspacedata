@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:../QNLibcurl/QNLibcurl.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:QiniuSDK.xcodeproj">
    </FileRef>
    <FileRef

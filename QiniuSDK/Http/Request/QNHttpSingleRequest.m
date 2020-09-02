@@ -21,8 +21,8 @@
 #import "QNReportItem.h"
 
 #import "QNUploadSystemClient.h"
+#import "QNUploadLibcurlClient.h"
 #import "NSURLRequest+QNRequest.h"
-
 
 @implementation QNUploadRequestState
 - (instancetype)init{
@@ -89,8 +89,8 @@
             progress:(void(^)(long long totalBytesWritten, long long totalBytesExpectedToWrite))progress
             complete:(QNSingleRequestCompleteHandler)complete{
     
-    if (toSkipDns && kQNGlobalConfiguration.isDnsOpen) {
-        self.client = [[QNUploadSystemClient alloc] init];
+    if (toSkipDns && kQNGlobalConfiguration.isDnsOpen && [self isLibcurlLoad]) {
+        self.client = [[QNUploadLibcurlClient alloc] init];
     } else {
         self.client = [[QNUploadSystemClient alloc] init];
     }
@@ -161,6 +161,10 @@
     if (complete) {
         complete(responseInfo, [self.requestMetricsList copy], response);
     }
+}
+
+- (BOOL)isLibcurlLoad{
+    return true;
 }
 
 //MARK:-- 统计quality日志
