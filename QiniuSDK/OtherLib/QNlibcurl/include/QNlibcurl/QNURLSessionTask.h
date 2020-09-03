@@ -128,6 +128,10 @@ totalBytesExpectedToReceive:(int64_t)totalBytesExpectedToReceive;
 
 @property float priority;
 
+// 外部不需要调用
++ (void)initResource;
++ (void)releaseResource;
+
 - (instancetype)initWithURLSession:(QNURLSession *)urlSession
                            request:(NSURLRequest *)request
                        delegate:(id <QNURLSessionDataTaskDelegate> _Nullable)delegate
