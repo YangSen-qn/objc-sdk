@@ -10,7 +10,7 @@
 #import "QNUserAgent.h"
 #import "NSURLRequest+QNRequest.h"
 #import "QNURLProtocol.h"
-#import "QNLibcurl.h"
+#import <QNLibcurl/QNLibcurl.h>
 
 @interface QNUploadLibcurlClient()<QNURLSessionDataTaskDelegate>
 

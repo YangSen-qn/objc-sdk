@@ -2,6 +2,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 def shared_dependencies
   pod 'HappyDNS', '0.3.17'
+  pod 'QNLibcurl', :path => '../QNLibcurl'
 end
 
 def test_dependencies

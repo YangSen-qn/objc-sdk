@@ -63,14 +63,6 @@
 		3149A1DF2462A57400A2A15B /* QNUploadServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 3149A1DA2462A57300A2A15B /* QNUploadServer.h */; };
 		3149A1E02462A57400A2A15B /* QNUploadServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3149A1DB2462A57300A2A15B /* QNUploadServer.m */; };
 		3149A1E12462A57400A2A15B /* QNUploadServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3149A1DB2462A57300A2A15B /* QNUploadServer.m */; };
-		3157B782250608E500707AE9 /* QNURLSessionConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 3157B77C250608E500707AE9 /* QNURLSessionConfiguration.h */; };
-		3157B783250608E500707AE9 /* QNURLSessionTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 3157B77D250608E500707AE9 /* QNURLSessionTask.h */; };
-		3157B784250608E500707AE9 /* QNlibcurl.h in Headers */ = {isa = PBXBuildFile; fileRef = 3157B77E250608E500707AE9 /* QNlibcurl.h */; };
-		3157B785250608E500707AE9 /* QNURLSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 3157B780250608E500707AE9 /* QNURLSession.h */; };
-		3157B786250608E500707AE9 /* QNlibcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3157B781250608E500707AE9 /* QNlibcurl.a */; };
-		3157B787250608E500707AE9 /* QNlibcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3157B781250608E500707AE9 /* QNlibcurl.a */; };
-		3157B7882506092100707AE9 /* cacert.pem in Resources */ = {isa = PBXBuildFile; fileRef = 3157B77F250608E500707AE9 /* cacert.pem */; };
-		3157B7892506092600707AE9 /* cacert.pem in Resources */ = {isa = PBXBuildFile; fileRef = 3157B77F250608E500707AE9 /* cacert.pem */; };
 		316A4B832431C8BA007BF564 /* QNDnsPrefetcherTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 316A4B822431C8BA007BF564 /* QNDnsPrefetcherTest.m */; };
 		316A4B842431C8D2007BF564 /* QNDnsPrefetcherTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 316A4B822431C8BA007BF564 /* QNDnsPrefetcherTest.m */; };
 		316A4B8824346364007BF564 /* QNTransactionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 316A4B8624346364007BF564 /* QNTransactionManager.h */; };
@@ -298,12 +290,6 @@
 		3149A1D92462A57300A2A15B /* QNUploadDomainRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNUploadDomainRegion.m; sourceTree = "<group>"; };
 		3149A1DA2462A57300A2A15B /* QNUploadServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNUploadServer.h; sourceTree = "<group>"; };
 		3149A1DB2462A57300A2A15B /* QNUploadServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNUploadServer.m; sourceTree = "<group>"; };
-		3157B77C250608E500707AE9 /* QNURLSessionConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNURLSessionConfiguration.h; sourceTree = "<group>"; };
-		3157B77D250608E500707AE9 /* QNURLSessionTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNURLSessionTask.h; sourceTree = "<group>"; };
-		3157B77E250608E500707AE9 /* QNlibcurl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNlibcurl.h; sourceTree = "<group>"; };
-		3157B77F250608E500707AE9 /* cacert.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cacert.pem; sourceTree = "<group>"; };
-		3157B780250608E500707AE9 /* QNURLSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNURLSession.h; sourceTree = "<group>"; };
-		3157B781250608E500707AE9 /* QNlibcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = QNlibcurl.a; sourceTree = "<group>"; };
 		316A4B822431C8BA007BF564 /* QNDnsPrefetcherTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNDnsPrefetcherTest.m; sourceTree = "<group>"; };
 		316A4B8624346364007BF564 /* QNTransactionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNTransactionManager.h; sourceTree = "<group>"; };
 		316A4B8724346364007BF564 /* QNTransactionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNTransactionManager.m; sourceTree = "<group>"; };
@@ -449,7 +435,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3157B787250608E500707AE9 /* QNlibcurl.a in Frameworks */,
 				05EFAFE5DD675C7ECAD063A4 /* libPods-QiniuSDK_iOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -459,7 +444,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF293C9119DB85CB00799011 /* libz.dylib in Frameworks */,
-				3157B786250608E500707AE9 /* QNlibcurl.a in Frameworks */,
 				A31ADA71DBBF1F4D8A065061 /* libPods-QiniuSDK_Mac.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -554,35 +538,6 @@
 			path = Collect;
 			sourceTree = "<group>";
 		};
-		3157B779250608E500707AE9 /* QNlibcurl */ = {
-			isa = PBXGroup;
-			children = (
-				3157B77A250608E500707AE9 /* include */,
-				3157B781250608E500707AE9 /* QNlibcurl.a */,
-			);
-			path = QNlibcurl;
-			sourceTree = "<group>";
-		};
-		3157B77A250608E500707AE9 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				3157B77B250608E500707AE9 /* QNlibcurl */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		3157B77B250608E500707AE9 /* QNlibcurl */ = {
-			isa = PBXGroup;
-			children = (
-				3157B77C250608E500707AE9 /* QNURLSessionConfiguration.h */,
-				3157B77D250608E500707AE9 /* QNURLSessionTask.h */,
-				3157B77E250608E500707AE9 /* QNlibcurl.h */,
-				3157B77F250608E500707AE9 /* cacert.pem */,
-				3157B780250608E500707AE9 /* QNURLSession.h */,
-			);
-			path = QNlibcurl;
-			sourceTree = "<group>";
-		};
 		316A4B852434633C007BF564 /* Transaction */ = {
 			isa = PBXGroup;
 			children = (
@@ -590,14 +545,6 @@
 				316A4B8724346364007BF564 /* QNTransactionManager.m */,
 			);
 			path = Transaction;
-			sourceTree = "<group>";
-		};
-		31A06FE624FF90C60067D718 /* OtherLib */ = {
-			isa = PBXGroup;
-			children = (
-				3157B779250608E500707AE9 /* QNlibcurl */,
-			);
-			path = OtherLib;
 			sourceTree = "<group>";
 		};
 		31AE4DD8246689A800503FBB /* HttpClient */ = {
@@ -752,7 +699,6 @@
 		DF2CDE4D19DAC6A400CE01FB /* QiniuSDK */ = {
 			isa = PBXGroup;
 			children = (
-				31A06FE624FF90C60067D718 /* OtherLib */,
 				314E49E424B3267B00310A03 /* Collect */,
 				31F553A92457C552000B66AD /* BigData */,
 				3149446424484DE200386F16 /* Utils */,
@@ -870,17 +816,14 @@
 				31A070162501E27B0067D718 /* QNDefine.h in Headers */,
 				3149A1DF2462A57400A2A15B /* QNUploadServer.h in Headers */,
 				31F5539D2456F2F3000B66AD /* QNFileDelegate.h in Headers */,
-				3157B785250608E500707AE9 /* QNURLSession.h in Headers */,
 				314944522446FED700386F16 /* NSObject+QNSwizzle.h in Headers */,
 				DF293C9E19DBC2AE00799011 /* QNUserAgent.h in Headers */,
 				314944572446FF4700386F16 /* QNCFHttpClient.h in Headers */,
 				31259E3424E3D02C00CF7531 /* NSData+QNGZip.h in Headers */,
-				3157B784250608E500707AE9 /* QNlibcurl.h in Headers */,
 				31C2EEE3242DE86300713A33 /* QNUtils.h in Headers */,
 				31A1841F246BD980001D6EEE /* QNUploadRequestInfo.h in Headers */,
 				31BAA27C243DB83700B7E883 /* QNURLProtocol.h in Headers */,
 				31F553952456F2F3000B66AD /* QNEtag.h in Headers */,
-				3157B783250608E500707AE9 /* QNURLSessionTask.h in Headers */,
 				DF437CD91B2429E10099587B /* QNUpToken.h in Headers */,
 				31F553A42456F2F3000B66AD /* QN_GTM_Base64.h in Headers */,
 				31F553A82456F2F3000B66AD /* QNSystem.h in Headers */,
@@ -891,7 +834,6 @@
 				DF482FD81B0DA8A2000DAD98 /* QNConfiguration.h in Headers */,
 				3149446C2448515900386F16 /* QNZoneInfo.h in Headers */,
 				31FD091F248662F900217848 /* QNUploadServerFreezeManager.h in Headers */,
-				3157B782250608E500707AE9 /* QNURLSessionConfiguration.h in Headers */,
 				4551E55F24CE81DA00447285 /* QNInetAddress.h in Headers */,
 				316A4B8824346364007BF564 /* QNTransactionManager.h in Headers */,
 				CCC3A50822DC10CB00D835B1 /* QNConcurrentResumeUpload.h in Headers */,
@@ -940,6 +882,7 @@
 				DF2CDDFB19DAC05500CE01FB /* Sources */,
 				DF2CDDFC19DAC05500CE01FB /* Frameworks */,
 				DF2CDDFD19DAC05500CE01FB /* Headers */,
+				742359CB9465EA4BD2668D91 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -958,6 +901,7 @@
 				DF2CDE0619DAC05500CE01FB /* Sources */,
 				DF2CDE0719DAC05500CE01FB /* Frameworks */,
 				DF2CDE0819DAC05500CE01FB /* Resources */,
+				E4CE03997E2D33FE48FCDC95 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -994,6 +938,7 @@
 				DF2CDE2019DAC08400CE01FB /* Sources */,
 				DF2CDE2119DAC08400CE01FB /* Frameworks */,
 				DF2CDE2219DAC08400CE01FB /* Resources */,
+				7B82ECDFF8F5C43846074C80 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1058,7 +1003,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3157B7882506092100707AE9 /* cacert.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1066,7 +1010,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3157B7892506092600707AE9 /* cacert.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1144,6 +1087,42 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		742359CB9465EA4BD2668D91 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-QiniuSDK_Mac/Pods-QiniuSDK_Mac-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/QNLibcurl-macOS/QNLibcurl.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QNLibcurl.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QiniuSDK_Mac/Pods-QiniuSDK_Mac-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7B82ECDFF8F5C43846074C80 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-QiniuSDK_iOSTests/Pods-QiniuSDK_iOSTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/QNLibcurl-iOS/QNLibcurl.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QNLibcurl.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QiniuSDK_iOSTests/Pods-QiniuSDK_iOSTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		9635BFBB21C34ACD5AEDC9EB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1160,6 +1139,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E4CE03997E2D33FE48FCDC95 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-QiniuSDK_MacTests/Pods-QiniuSDK_MacTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/QNLibcurl-macOS/QNLibcurl.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QNLibcurl.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QiniuSDK_MacTests/Pods-QiniuSDK_MacTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
