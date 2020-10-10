@@ -74,11 +74,7 @@ connectionProxy:(NSDictionary *)connectionProxy
 }
 
 - (void)cancel{
-    
-#if LoadLibCurl
     [self.uploadTask cancel];
-#endif
-    
 }
 
 //MARK:-- QNURLSessionDelegate
@@ -98,8 +94,6 @@ connectionProxy:(NSDictionary *)connectionProxy
     self.requestMetrics.countOfResponseBodyBytesReceived = task.response.expectedContentLength;
     self.requestMetrics.countOfRequestHeaderBytesSent = [NSString stringWithFormat:@"%@", task.currentRequest.allHTTPHeaderFields].length;
     self.complete(task.response, self.requestMetrics,self.responseData, error);
-    
-//    [session finishTasksAndInvalidate];
 }
 
 - (void)URLSession:(id <IQNURLSession>)session task:(id <IQNURLSessionDataTask>)task didFinishCollectingMetrics:(id <IQNURLSessionTaskMetrics>)metrics {

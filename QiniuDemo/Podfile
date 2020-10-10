@@ -3,7 +3,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 target "QiniuDemo" do
   platform :ios, "7.0"
   
-#  pod 'QNLibcurl', :path => '../../QNLibcurl'
+  pod 'QNLibcurl', :path => '../../QNLibcurl'
   pod 'Qiniu',:path => '../'
 end
 
