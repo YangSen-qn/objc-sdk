@@ -8,6 +8,7 @@
 
 #import "Configure.h" // 测试参数配置，暂时只有token，可删除
 
+#import "Dns.h"
 #import "ViewController.h"
 #import "QNTransactionManager.h"
 
@@ -37,6 +38,9 @@ typedef NS_ENUM(NSInteger, UploadState){
     // Do any additional setup after loading the view, typically from a nib.
     [self changeUploadState:UploadStatePrepare];
     self.title = @"七牛云上传";
+    
+    kQNGlobalConfiguration.dns = [[Dns alloc] init];
+    kQNGlobalConfiguration.isDnsOpen = true;
 }
 
 - (IBAction)chooseAction:(id)sender {
@@ -83,9 +87,12 @@ typedef NS_ENUM(NSInteger, UploadState){
     
     self.token = YourToken;
     QNConfiguration *configuration = [QNConfiguration build:^(QNConfigurationBuilder *builder) {
-        builder.useLibcurl = true;
+//        builder.useLibcurl = true;
+        builder.useHttps = false;
         builder.useConcurrentResumeUpload = true;
         builder.recorder = [QNFileRecorder fileRecorderWithFolder:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] error:nil];
+        
+        builder.zone = [[QNFixedZone alloc] initWithUpDomainList:@[@"up.qiniu.com"]];
     }];
     QNUploadManager *upManager = [[QNUploadManager alloc] initWithConfiguration:configuration];
     

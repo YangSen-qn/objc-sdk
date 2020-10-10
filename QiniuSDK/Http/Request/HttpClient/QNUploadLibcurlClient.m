@@ -56,7 +56,7 @@ connectionProxy:(NSDictionary *)connectionProxy
                                                                         ip:request.qn_ip
                                                                       port:request.qn_isHttps ? 443 : 80];
         configuration.dnsResolverArray = @[resolver];
-        
+        NSLog(@"== libcurl host:%@, ip:%@", request.qn_domain, request.qn_ip);
     }
     if (connectionProxy) {
         configuration.connectionProxyDictionary = connectionProxy;

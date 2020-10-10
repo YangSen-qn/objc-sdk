@@ -43,9 +43,14 @@
     
     @autoreleasepool {
         self.request = [request mutableCopy];
+        NSString *ip = [self.request qn_ip];
+        NSString *host = [self.request qn_domain];
+        NSString *urlString = self.request.URL.absoluteString;
+        urlString = [urlString stringByReplacingOccurrencesOfString:host withString:ip];
+        self.request.URL = [NSURL URLWithString:urlString];
+        
         NSInputStream *inputStream = [self createInputStream:self.request];
         
-        NSString *host = [self.request qn_domain];
         if ([self.request qn_isHttps]) {
            [self setInputStreamSNI:inputStream sni:host];
         }
