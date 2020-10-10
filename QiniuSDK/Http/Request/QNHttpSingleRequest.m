@@ -90,7 +90,7 @@
             progress:(void(^)(long long totalBytesWritten, long long totalBytesExpectedToWrite))progress
             complete:(QNSingleRequestCompleteHandler)complete{
     
-    if (toSkipDns && kQNGlobalConfiguration.isDnsOpen && [self isLibcurlLoad]) {
+    if (toSkipDns && kQNGlobalConfiguration.isDnsOpen && self.config.useLibcurl && kIsLoadLibcurl()) {
         self.client = [[QNUploadLibcurlClient alloc] init];
     } else {
         self.client = [[QNUploadSystemClient alloc] init];
@@ -166,10 +166,6 @@
     if (complete) {
         complete(responseInfo, [self.requestMetricsList copy], response);
     }
-}
-
-- (BOOL)isLibcurlLoad{
-    return true;
 }
 
 //MARK:-- 统计quality日志

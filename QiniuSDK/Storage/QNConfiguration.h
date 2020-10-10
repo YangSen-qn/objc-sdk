@@ -112,6 +112,12 @@ typedef void (^QNConfigurationBuilderBlock)(QNConfigurationBuilder *builder);
  */
 @property (nonatomic, readonly) QNUrlConvert converter;
 
+
+/**
+ *  是否使用libcurl进行上传操作，libcurl支持Http3
+ */
+@property (nonatomic, readonly) BOOL useLibcurl;
+
 /**
  *  默认配置
  */
@@ -230,5 +236,10 @@ typedef void (^QNConfigurationBuilderBlock)(QNConfigurationBuilder *builder);
  *  上传URL转换，使url转换为用户需要的url
  */
 @property (nonatomic, strong) QNUrlConvert converter;
+
+/**
+ *  是否使用libcurl进行上传操作，libcurl支持Http3
+ */
+@property (nonatomic, assign) BOOL useLibcurl;
 
 @end

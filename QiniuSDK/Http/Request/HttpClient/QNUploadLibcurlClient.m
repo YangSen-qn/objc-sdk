@@ -6,16 +6,22 @@
 //  Copyright © 2020 Qiniu. All rights reserved.
 //
 
+#import "IQNURLSessionDataTask.h"
+#import "IQNURLSessionConfiguration.h"
+#import "IQNURLSession.h"
+
 #import "QNUploadLibcurlClient.h"
 #import "QNUserAgent.h"
 #import "NSURLRequest+QNRequest.h"
 #import "QNURLProtocol.h"
-#import <QNLibcurl/QNLibcurl.h>
 
-@interface QNUploadLibcurlClient()<QNURLSessionDataTaskDelegate>
+@interface QNUploadLibcurlClient()
 
 @property(nonatomic, strong)QNUploadSingleRequestMetrics *requestMetrics;
-@property(nonatomic, strong)QNURLSessionDataTask *uploadTask;
+
+@property(nonatomic, strong)id <IQNURLSessionDataTask> uploadTask;
+
+
 @property(nonatomic, strong)NSMutableData *responseData;
 @property(nonatomic,   copy)void(^progress)(long long totalBytesWritten, long long totalBytesExpectedToWrite);
 @property(nonatomic,  copy)QNRequestClientCompleteHandler complete;
@@ -28,6 +34,12 @@ connectionProxy:(NSDictionary *)connectionProxy
        progress:(void (^)(long long, long long))progress
        complete:(QNRequestClientCompleteHandler)complete {
     
+    if (!kIsLoadLibcurl()) {
+        NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:-1003 userInfo:@{@"error" : @"no libcurl exist"}];
+        complete(nil, nil, nil, error);
+        return;
+    }
+    
     self.requestMetrics = [QNUploadSingleRequestMetrics emptyMetrics];
     self.requestMetrics.remoteAddress = request.qn_ip;
     self.requestMetrics.startDate = [NSDate date];
@@ -36,40 +48,49 @@ connectionProxy:(NSDictionary *)connectionProxy
     self.progress = progress;
     self.complete = complete;
     
-    QNURLSessionConfiguration *configuration = [[QNURLSessionConfiguration alloc] init];
+    Class QNURLSessionConfiguration = NSClassFromString(@"QNURLSessionConfiguration");
+    id <IQNURLSessionConfiguration> _Nonnull configuration = [[QNURLSessionConfiguration alloc] init];
     if (request.qn_ip.length > 0 && request.qn_domain.length > 0) {
-        QNDnsResolver *resolver = [[QNDnsResolver alloc] initWithHost:request.qn_domain
-                                                                   ip:request.qn_ip
-                                                                 port:request.qn_isHttps ? 443 : 80];
+        Class QNDnsResolver = NSClassFromString(@"QNDnsResolver");
+        id <IQNDnsResolver> resolver = [[QNDnsResolver alloc] initWithHost:request.qn_domain
+                                                                        ip:request.qn_ip
+                                                                      port:request.qn_isHttps ? 443 : 80];
         configuration.dnsResolverArray = @[resolver];
         
     }
     if (connectionProxy) {
         configuration.connectionProxyDictionary = connectionProxy;
     }
-    QNURLSession *session = [QNURLSession sessionWithConfiguration:configuration
-                                                          delegate:self
-                                                     delegateQueue:nil];
-    QNURLSessionDataTask *uploadTask = [session dataTaskWithRequest:request];
+    
+    Class QNURLSession = NSClassFromString(@"QNURLSession");
+    id <IQNURLSession> session = (id <IQNURLSession>)[QNURLSession sessionWithConfiguration:(NSURLSessionConfiguration *)configuration
+                                                                                   delegate:(id <NSURLSessionDelegate>)self
+                                                                              delegateQueue:nil];
+    
+    id <IQNURLSessionDataTask> uploadTask = [session dataTaskWithRequest:request];
     [uploadTask resume];
     
     self.uploadTask = uploadTask;
 }
 
 - (void)cancel{
+    
+#if LoadLibCurl
     [self.uploadTask cancel];
+#endif
+    
 }
 
 //MARK:-- QNURLSessionDelegate
-- (void)URLSession:(QNURLSession *)session dataTask:(QNURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
+- (void)URLSession:(id <IQNURLSession>)session dataTask:(id <IQNURLSessionDataTask>)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
     completionHandler(NSURLSessionResponseAllow);
 }
 
-- (void)URLSession:(QNURLSession *)session dataTask:(QNURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
+- (void)URLSession:(id <IQNURLSession>)session dataTask:(id <IQNURLSessionDataTask>)dataTask didReceiveData:(NSData *)data {
     [self.responseData appendData:data];
 }
 
-- (void)URLSession:(QNURLSession *)session task:(QNURLSessionDataTask *)task didCompleteWithError:(nullable NSError *)error {
+- (void)URLSession:(id <IQNURLSession>)session task:(id <IQNURLSessionDataTask>)task didCompleteWithError:(nullable NSError *)error {
     
     self.requestMetrics.endDate = [NSDate date];
     self.requestMetrics.request = task.currentRequest;
@@ -81,8 +102,9 @@ connectionProxy:(NSDictionary *)connectionProxy
 //    [session finishTasksAndInvalidate];
 }
 
-- (void)URLSession:(QNURLSession *)session task:(QNURLSessionDataTask *)task didFinishCollectingMetrics:(QNURLSessionTaskMetrics *)metrics {
-    QNURLSessionTaskTransactionMetrics *transactionMetrics = metrics.transactionMetrics.lastObject;
+- (void)URLSession:(id <IQNURLSession>)session task:(id <IQNURLSessionDataTask>)task didFinishCollectingMetrics:(id <IQNURLSessionTaskMetrics>)metrics {
+    
+    id <IQNURLSessionTaskTransactionMetrics> transactionMetrics = metrics.transactionMetrics.lastObject;
     
     self.requestMetrics.domainLookupStartDate = transactionMetrics.domainLookupStartDate;
     self.requestMetrics.domainLookupEndDate = transactionMetrics.domainLookupEndDate;
@@ -102,10 +124,11 @@ connectionProxy:(NSDictionary *)connectionProxy
     self.requestMetrics.remotePort = transactionMetrics.remotePort;
 }
 
-- (void)URLSession:(QNURLSession *)session task:(NSURLSessionTask *)task
-             didSendBodyData:(int64_t)bytesSent
-              totalBytesSent:(int64_t)totalBytesSent
-    totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
+- (void)URLSession:(id <IQNURLSession>)session
+              task:(NSURLSessionTask *)task
+   didSendBodyData:(int64_t)bytesSent
+    totalBytesSent:(int64_t)totalBytesSent
+totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
     self.requestMetrics.countOfRequestBodyBytesSent = totalBytesSent;
     if (self.progress) {
@@ -113,8 +136,12 @@ connectionProxy:(NSDictionary *)connectionProxy
     }
 }
 
-- (void)URLSession:(QNURLSession *)session task:(QNURLSessionTask *)task didReceiveBodyData:(int64_t)bytesReceive totalBytesReceive:(int64_t)totalBytesReceive totalBytesExpectedToReceive:(int64_t)totalBytesExpectedToReceive{
+- (void)URLSession:(id <IQNURLSession>)session task:(id <IQNURLSessionDataTask>)task didReceiveBodyData:(int64_t)bytesReceive totalBytesReceive:(int64_t)totalBytesReceive totalBytesExpectedToReceive:(int64_t)totalBytesExpectedToReceive{
     
 }
 
 @end
+
+extern BOOL kIsLoadLibcurl(){
+    return NSClassFromString(@"QNURLSession");
+}

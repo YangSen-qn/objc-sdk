@@ -33,6 +33,7 @@ const UInt32 kQNDefaultDnsCacheTime = 2 * 60;
 - (instancetype)initWithBuilder:(QNConfigurationBuilder *)builder {
     if (self = [super init]) {
 
+        _zone = builder.zone;
         _chunkSize = builder.chunkSize;
         _putThreshold = builder.putThreshold;
         _retryMax = builder.retryMax;
@@ -43,18 +44,14 @@ const UInt32 kQNDefaultDnsCacheTime = 2 * 60;
         _recorderKeyGen = builder.recorderKeyGen;
 
         _proxy = builder.proxy;
-
         _converter = builder.converter;
-        
-        _zone = builder.zone;
 
         _useHttps = builder.useHttps;
-
         _allowBackupHost = builder.allowBackupHost;
-
         _useConcurrentResumeUpload = builder.useConcurrentResumeUpload;
-        
         _concurrentTaskCount = builder.concurrentTaskCount;
+        
+        _useLibcurl = builder.useLibcurl;
     }
     return self;
 }
@@ -102,6 +99,8 @@ const UInt32 kQNDefaultDnsCacheTime = 2 * 60;
         _allowBackupHost = YES;
         _useConcurrentResumeUpload = NO;
         _concurrentTaskCount = 3;
+        
+        _useLibcurl = false;
     }
     return self;
 }

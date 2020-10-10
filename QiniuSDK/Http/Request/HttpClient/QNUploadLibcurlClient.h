@@ -14,4 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+extern BOOL kIsLoadLibcurl();
+
 NS_ASSUME_NONNULL_END

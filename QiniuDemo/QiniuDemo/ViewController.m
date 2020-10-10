@@ -83,6 +83,7 @@ typedef NS_ENUM(NSInteger, UploadState){
     
     self.token = YourToken;
     QNConfiguration *configuration = [QNConfiguration build:^(QNConfigurationBuilder *builder) {
+        builder.useLibcurl = true;
         builder.useConcurrentResumeUpload = true;
         builder.recorder = [QNFileRecorder fileRecorderWithFolder:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] error:nil];
     }];
