@@ -6,7 +6,13 @@
 //  Copyright © 2016年 Aaron. All rights reserved.
 //
 
-#import "Configure.h" // 测试参数配置，暂时只有token，可删除
+#if __has_include("Configure.h")
+#import "Configure.h"
+#else
+#define YourToken ""
+#define IsTest NO
+#define IsPrivateTest false
+#endif
 
 #import "Dns.h"
 #import "ViewController.h"
@@ -38,9 +44,12 @@ typedef NS_ENUM(NSInteger, UploadState){
     // Do any additional setup after loading the view, typically from a nib.
     [self changeUploadState:UploadStatePrepare];
     self.title = @"七牛云上传";
-    
+
+#if IsPrivateTest
     kQNGlobalConfiguration.dns = [[Dns alloc] init];
     kQNGlobalConfiguration.isDnsOpen = true;
+#endif
+    
 }
 
 - (IBAction)chooseAction:(id)sender {
@@ -50,8 +59,10 @@ typedef NS_ENUM(NSInteger, UploadState){
 - (IBAction)uploadAction:(UIButton *)sender {
     if (self.uploadState == UploadStatePrepare) {
     
-#ifdef YourToken
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"UploadResource.dmg" ofType:nil];
+#ifdef IsTest
+//        NSString *path = [[NSBundle mainBundle] pathForResource:@"UploadResource.dmg" ofType:nil];
+//        NSString *path = [[NSBundle mainBundle] pathForResource:@"image.png" ofType:nil];
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"image.jpg" ofType:nil];
         [self uploadImageToQNFilePath:path];
         [self changeUploadState:UploadStateUploading];
 #else
@@ -87,12 +98,13 @@ typedef NS_ENUM(NSInteger, UploadState){
     
     self.token = YourToken;
     QNConfiguration *configuration = [QNConfiguration build:^(QNConfigurationBuilder *builder) {
-        builder.useLibcurl = true;
+        builder.useLibcurl = IsPrivateTest;
         builder.useHttps = true;
         builder.useConcurrentResumeUpload = true;
         builder.recorder = [QNFileRecorder fileRecorderWithFolder:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] error:nil];
-        
+#if IsPrivateTest
         builder.zone = [[QNFixedZone alloc] initWithUpDomainList:@[@"up.qiniu.com"]];
+#endif
     }];
     QNUploadManager *upManager = [[QNUploadManager alloc] initWithConfiguration:configuration];
     
