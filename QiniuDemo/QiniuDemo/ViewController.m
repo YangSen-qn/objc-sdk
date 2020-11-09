@@ -119,12 +119,14 @@ typedef NS_ENUM(NSInteger, UploadState){
         return weakSelf.uploadState == UploadStateCancelling;
     }];
     
+    NSDate *startDate = [NSDate date];
     [upManager putFile:filePath key:@"DemoResource" token:self.token complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
         NSLog(@"info ===== %@", info);
         NSLog(@"resp ===== %@", resp);
         
+        NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:startDate];
         [weakSelf changeUploadState:UploadStatePrepare];
-        [weakSelf alertMessage:info.message];
+        [weakSelf alertMessage:[NSString stringWithFormat:@"%@ \r\n duration:%f", info.message, duration]];
     }
                 option:uploadOption];
 }
