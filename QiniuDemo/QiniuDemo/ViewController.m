@@ -45,6 +45,8 @@ typedef NS_ENUM(NSInteger, UploadState){
     [self changeUploadState:UploadStatePrepare];
     self.title = @"七牛云上传";
 
+    kQNGlobalConfiguration.isDnsOpen = false;
+    
 #if IsPrivateTest
     kQNGlobalConfiguration.dns = [[Dns alloc] init];
     kQNGlobalConfiguration.isDnsOpen = true;
@@ -98,7 +100,7 @@ typedef NS_ENUM(NSInteger, UploadState){
     
     self.token = YourToken;
     QNConfiguration *configuration = [QNConfiguration build:^(QNConfigurationBuilder *builder) {
-        builder.useLibcurl = IsPrivateTest;
+//        builder.useLibcurl = IsPrivateTest;
         builder.useHttps = true;
         builder.useConcurrentResumeUpload = true;
         builder.recorder = [QNFileRecorder fileRecorderWithFolder:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] error:nil];

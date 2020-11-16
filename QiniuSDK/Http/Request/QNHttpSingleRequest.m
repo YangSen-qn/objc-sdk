@@ -90,7 +90,7 @@
             progress:(void(^)(long long totalBytesWritten, long long totalBytesExpectedToWrite))progress
             complete:(QNSingleRequestCompleteHandler)complete{
     
-    if (toSkipDns && kQNGlobalConfiguration.isDnsOpen && self.config.useLibcurl && kIsLoadLibcurl()) {
+    if (self.config.useHTTP3 && kIsLoadLibcurl()) {
         self.client = [[QNUploadLibcurlClient alloc] init];
     } else {
         self.client = [[QNUploadSystemClient alloc] init];

@@ -51,7 +51,7 @@ const UInt32 kQNDefaultDnsCacheTime = 2 * 60;
         _useConcurrentResumeUpload = builder.useConcurrentResumeUpload;
         _concurrentTaskCount = builder.concurrentTaskCount;
         
-        _useLibcurl = builder.useLibcurl;
+        _useHTTP3 = builder.useHTTP3;
     }
     return self;
 }
@@ -103,7 +103,7 @@ const UInt32 kQNDefaultDnsCacheTime = 2 * 60;
         _useConcurrentResumeUpload = NO;
         _concurrentTaskCount = 3;
         
-        _useLibcurl = false;
+        _useHTTP3 = false;
     }
     return self;
 }
