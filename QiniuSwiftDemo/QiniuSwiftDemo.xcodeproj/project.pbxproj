@@ -1,0 +1,436 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		457BE6652C1AEF500053FB28 /* Qiniu in Frameworks */ = {isa = PBXBuildFile; productRef = 457BE6642C1AEF500053FB28 /* Qiniu */; };
+		457BE6672C1AEFC30053FB28 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BE6662C1AEFC30053FB28 /* Config.swift */; };
+		457BE66B2C1AF2940053FB28 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BE66A2C1AF2940053FB28 /* Utils.swift */; };
+		457BE66F2C1AFDBF0053FB28 /* placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 457BE66E2C1AFDBF0053FB28 /* placeholder.png */; };
+		457BE6712C1BF1D40053FB28 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BE6702C1BF1D40053FB28 /* ImagePicker.swift */; };
+		457BE6742C1C1E2D0053FB28 /* Uploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BE6732C1C1E2D0053FB28 /* Uploader.swift */; };
+		457BE6772C1C2C770053FB28 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 457BE6762C1C2C770053FB28 /* PopupView */; };
+		45E183802C1ADB6E0002D3AB /* QiniuSwiftDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1837F2C1ADB6E0002D3AB /* QiniuSwiftDemoApp.swift */; };
+		45E183822C1ADB6E0002D3AB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E183812C1ADB6E0002D3AB /* ContentView.swift */; };
+		45E183842C1ADB700002D3AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45E183832C1ADB700002D3AB /* Assets.xcassets */; };
+		45E183872C1ADB700002D3AB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45E183862C1ADB700002D3AB /* Preview Assets.xcassets */; };
+		45E1838E2C1AE47B0002D3AB /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1838D2C1AE47B0002D3AB /* SettingView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		457BE6662C1AEFC30053FB28 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		457BE66A2C1AF2940053FB28 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		457BE66E2C1AFDBF0053FB28 /* placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = placeholder.png; sourceTree = "<group>"; };
+		457BE6702C1BF1D40053FB28 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		457BE6732C1C1E2D0053FB28 /* Uploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uploader.swift; sourceTree = "<group>"; };
+		45E1837C2C1ADB6E0002D3AB /* QiniuSwiftDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QiniuSwiftDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		45E1837F2C1ADB6E0002D3AB /* QiniuSwiftDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiniuSwiftDemoApp.swift; sourceTree = "<group>"; };
+		45E183812C1ADB6E0002D3AB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		45E183832C1ADB700002D3AB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		45E183862C1ADB700002D3AB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		45E1838D2C1AE47B0002D3AB /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		45E183792C1ADB6E0002D3AB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				457BE6772C1C2C770053FB28 /* PopupView in Frameworks */,
+				457BE6652C1AEF500053FB28 /* Qiniu in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		457BE66D2C1AFDAF0053FB28 /* resource */ = {
+			isa = PBXGroup;
+			children = (
+				457BE66E2C1AFDBF0053FB28 /* placeholder.png */,
+			);
+			path = resource;
+			sourceTree = "<group>";
+		};
+		457BE6722C1C1DE30053FB28 /* QiniuUpload */ = {
+			isa = PBXGroup;
+			children = (
+				457BE6732C1C1E2D0053FB28 /* Uploader.swift */,
+			);
+			path = QiniuUpload;
+			sourceTree = "<group>";
+		};
+		45E183732C1ADB6E0002D3AB = {
+			isa = PBXGroup;
+			children = (
+				45E1837E2C1ADB6E0002D3AB /* QiniuSwiftDemo */,
+				45E1837D2C1ADB6E0002D3AB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		45E1837D2C1ADB6E0002D3AB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				45E1837C2C1ADB6E0002D3AB /* QiniuSwiftDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		45E1837E2C1ADB6E0002D3AB /* QiniuSwiftDemo */ = {
+			isa = PBXGroup;
+			children = (
+				457BE6722C1C1DE30053FB28 /* QiniuUpload */,
+				457BE66D2C1AFDAF0053FB28 /* resource */,
+				45E1837F2C1ADB6E0002D3AB /* QiniuSwiftDemoApp.swift */,
+				45E183812C1ADB6E0002D3AB /* ContentView.swift */,
+				45E183832C1ADB700002D3AB /* Assets.xcassets */,
+				45E183852C1ADB700002D3AB /* Preview Content */,
+				45E1838D2C1AE47B0002D3AB /* SettingView.swift */,
+				457BE6662C1AEFC30053FB28 /* Config.swift */,
+				457BE66A2C1AF2940053FB28 /* Utils.swift */,
+				457BE6702C1BF1D40053FB28 /* ImagePicker.swift */,
+			);
+			path = QiniuSwiftDemo;
+			sourceTree = "<group>";
+		};
+		45E183852C1ADB700002D3AB /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				45E183862C1ADB700002D3AB /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		45E1837B2C1ADB6E0002D3AB /* QiniuSwiftDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 45E1838A2C1ADB700002D3AB /* Build configuration list for PBXNativeTarget "QiniuSwiftDemo" */;
+			buildPhases = (
+				45E183782C1ADB6E0002D3AB /* Sources */,
+				45E183792C1ADB6E0002D3AB /* Frameworks */,
+				45E1837A2C1ADB6E0002D3AB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = QiniuSwiftDemo;
+			packageProductDependencies = (
+				457BE6642C1AEF500053FB28 /* Qiniu */,
+				457BE6762C1C2C770053FB28 /* PopupView */,
+			);
+			productName = QiniuSwiftDemo;
+			productReference = 45E1837C2C1ADB6E0002D3AB /* QiniuSwiftDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		45E183742C1ADB6E0002D3AB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					45E1837B2C1ADB6E0002D3AB = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 45E183772C1ADB6E0002D3AB /* Build configuration list for PBXProject "QiniuSwiftDemo" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 45E183732C1ADB6E0002D3AB;
+			packageReferences = (
+				457BE6632C1AEF500053FB28 /* XCRemoteSwiftPackageReference "objc-sdk" */,
+				457BE6752C1C2C770053FB28 /* XCRemoteSwiftPackageReference "PopupView" */,
+			);
+			productRefGroup = 45E1837D2C1ADB6E0002D3AB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				45E1837B2C1ADB6E0002D3AB /* QiniuSwiftDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		45E1837A2C1ADB6E0002D3AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45E183872C1ADB700002D3AB /* Preview Assets.xcassets in Resources */,
+				457BE66F2C1AFDBF0053FB28 /* placeholder.png in Resources */,
+				45E183842C1ADB700002D3AB /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		45E183782C1ADB6E0002D3AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				457BE66B2C1AF2940053FB28 /* Utils.swift in Sources */,
+				457BE6742C1C1E2D0053FB28 /* Uploader.swift in Sources */,
+				45E1838E2C1AE47B0002D3AB /* SettingView.swift in Sources */,
+				457BE6672C1AEFC30053FB28 /* Config.swift in Sources */,
+				457BE6712C1BF1D40053FB28 /* ImagePicker.swift in Sources */,
+				45E183822C1ADB6E0002D3AB /* ContentView.swift in Sources */,
+				45E183802C1ADB6E0002D3AB /* QiniuSwiftDemoApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		45E183882C1ADB700002D3AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/QiniuSwiftDemo/QiniuSwiftDemo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		45E183892C1ADB700002D3AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/QiniuSwiftDemo/QiniuSwiftDemo-Bridging-Header.h";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		45E1838B2C1ADB700002D3AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"QiniuSwiftDemo/Preview Content\"";
+				DEVELOPMENT_TEAM = X2US9XXC6H;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qiniu.demo.QiniuSwiftDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		45E1838C2C1ADB700002D3AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"QiniuSwiftDemo/Preview Content\"";
+				DEVELOPMENT_TEAM = X2US9XXC6H;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qiniu.demo.QiniuSwiftDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		45E183772C1ADB6E0002D3AB /* Build configuration list for PBXProject "QiniuSwiftDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				45E183882C1ADB700002D3AB /* Debug */,
+				45E183892C1ADB700002D3AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		45E1838A2C1ADB700002D3AB /* Build configuration list for PBXNativeTarget "QiniuSwiftDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				45E1838B2C1ADB700002D3AB /* Debug */,
+				45E1838C2C1ADB700002D3AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		457BE6632C1AEF500053FB28 /* XCRemoteSwiftPackageReference "objc-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/qiniu/objc-sdk";
+			requirement = {
+				kind = versionRange;
+				maximumVersion = 8.8.0;
+				minimumVersion = 8.7.0;
+			};
+		};
+		457BE6752C1C2C770053FB28 /* XCRemoteSwiftPackageReference "PopupView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/PopupView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		457BE6642C1AEF500053FB28 /* Qiniu */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 457BE6632C1AEF500053FB28 /* XCRemoteSwiftPackageReference "objc-sdk" */;
+			productName = Qiniu;
+		};
+		457BE6762C1C2C770053FB28 /* PopupView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 457BE6752C1C2C770053FB28 /* XCRemoteSwiftPackageReference "PopupView" */;
+			productName = PopupView;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 45E183742C1ADB6E0002D3AB /* Project object */;
+}
