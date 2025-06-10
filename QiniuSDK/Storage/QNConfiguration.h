@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "QNRecorderDelegate.h"
 #import "QNDns.h"
+#import "QNDefine.h"
 
 /**
  * 断点上传时的分块大小
@@ -133,13 +134,28 @@ typedef void (^QNConfigurationBuilderBlock)(QNConfigurationBuilder *builder);
 /**
  *  默认配置
  */
-+ (instancetype)defaultConfiguration;
++ (instancetype)defaultConfiguration kQNDeprecated("use defaultConfigurationV2 instead");
+
+/**
+ *  默认配置
+ *
+ *  此默认配置中分片上传使用分片V2，如果是私/专有云场景，请注意确认服务端是否支持分片V2
+ */
++ (instancetype)defaultConfigurationV2;
 
 /**
  *  使用 QNConfigurationBuilder 进行配置
  *  @param block  配置block
  */
-+ (instancetype)build:(QNConfigurationBuilderBlock)block;
++ (instancetype)build:(QNConfigurationBuilderBlock)block kQNDeprecated("use buildV2 instead");
+
+/**
+ *  使用 QNConfigurationBuilder 进行配置
+ *  此配置中分片上传默认使用分片V2，如果是私/专有云场景，请注意确认服务端是否支持分片V2
+ *
+ *  @param block  配置block
+ */
++ (instancetype)buildV2:(QNConfigurationBuilderBlock)block;
 
 @end
 

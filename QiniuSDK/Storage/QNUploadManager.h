@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "QNRecorderDelegate.h"
+#import "QNDefine.h"
 
 @class QNResponseInfo;
 @class QNUploadOption;
@@ -39,7 +40,7 @@ typedef void (^QNUpCompletionHandler)(QNResponseInfo *info, NSString *key, NSDic
  *
  *    @return 上传管理类实例
  */
-- (instancetype)init;
+- (instancetype)init kQNDeprecated("use initWithConfiguration instead");
 
 /**
  *    使用一个持久化的记录接口进行记录的构造方法
@@ -48,7 +49,7 @@ typedef void (^QNUpCompletionHandler)(QNResponseInfo *info, NSString *key, NSDic
  *
  *    @return 上传管理类实例
  */
-- (instancetype)initWithRecorder:(id<QNRecorderDelegate>)recorder;
+- (instancetype)initWithRecorder:(id<QNRecorderDelegate>)recorder kQNDeprecated("use initWithConfiguration instead");
 
 /**
  *    使用持久化记录接口以及持久化key生成函数的构造方法，默认情况下使用上传存储的key, 如果key为nil或者有特殊字符比如/，建议使用自己的生成函数
@@ -59,7 +60,7 @@ typedef void (^QNUpCompletionHandler)(QNResponseInfo *info, NSString *key, NSDic
  *    @return 上传管理类实例
  */
 - (instancetype)initWithRecorder:(id<QNRecorderDelegate>)recorder
-            recorderKeyGenerator:(QNRecorderKeyGenerator)recorderKeyGenerator;
+            recorderKeyGenerator:(QNRecorderKeyGenerator)recorderKeyGenerator kQNDeprecated("use initWithConfiguration instead");
 
 /**
  *    使用配置信息生成上传实例
