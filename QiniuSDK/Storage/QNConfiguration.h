@@ -151,7 +151,8 @@ typedef void (^QNConfigurationBuilderBlock)(QNConfigurationBuilder *builder);
 
 /**
  *  使用 QNConfigurationBuilder 进行配置
- *  此配置中分片上传默认使用分片V2，如果是私/专有云场景，请注意确认服务端是否支持分片V2
+ *  配置中分片上传默认使用分片V2，如果是私/专有云场景，请注意确认服务端是否支持分片V2
+ *  分片V2上传更快效率更高
  *
  *  @param block  配置block
  */

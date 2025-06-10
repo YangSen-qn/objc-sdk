@@ -26,7 +26,7 @@ File -> Swift Packages -> Add Package Dependency，输入库链接，选择相�
 库对接:
 let package = Package(
     dependencies: [
-        .package(url: "https://github.com/qiniu/objc-sdk", from: "8.8.0")
+        .package(url: "https://github.com/qiniu/objc-sdk", from: "8.9.0")
     ],
     // ...
 )
@@ -37,6 +37,7 @@ let package = Package(
 
 |               Qiniu SDK 版本               | 最低 iOS版本 | 最低 OS X 版本 |     Notes     |
 | :--------------------------------------: | :------: | :--------: | :-----------: |
+|                  8.9.x                   |  iOS 9   | OS X 10.15  | Xcode 最低版本 11 |
 |                  8.8.x                   |  iOS 9   | OS X 10.15  | Xcode 最低版本 11 |
 |                  8.7.x                   |  iOS 9   | OS X 10.15  | Xcode 最低版本 11 |
 |                  8.6.x                   |  iOS 7   | OS X 10.15  | Xcode 最低版本 11 |
