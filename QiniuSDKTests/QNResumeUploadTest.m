@@ -36,7 +36,7 @@
 }
 
 - (void)testSwitchRegionV1 {
-    QNConfiguration *config = [QNConfiguration build:^(QNConfigurationBuilder *builder) {
+    QNConfiguration *config = [QNConfiguration buildV2:^(QNConfigurationBuilder *builder) {
         builder.resumeUploadVersion = QNResumeUploadVersionV1;
         builder.useConcurrentResumeUpload = NO;
         builder.useHttps = YES;
@@ -52,7 +52,7 @@
 - (void)testCancelV1 {
     float cancelPercent = 0.1;
     
-    QNConfiguration *config = [QNConfiguration build:^(QNConfigurationBuilder *builder) {
+    QNConfiguration *config = [QNConfiguration buildV2:^(QNConfigurationBuilder *builder) {
         builder.resumeUploadVersion = QNResumeUploadVersionV1;
         builder.useConcurrentResumeUpload = NO;
         builder.useHttps = YES;

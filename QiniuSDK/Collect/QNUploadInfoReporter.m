@@ -116,8 +116,17 @@
 }
 
 - (void)saveReportJsonString:(NSString *)jsonString {
-    NSString *finalRecordInfo = [jsonString stringByAppendingString:@"\n"];
     NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager fileExistsAtPath:self.config.recordDirectory]) {
+        NSError *err;
+        [fileManager createDirectoryAtPath:self.config.recordDirectory withIntermediateDirectories:YES attributes:nil error:&err];
+        if (err) {
+            NSLog(@"create record directory failed, please check record directory: %@", err.localizedDescription);
+            return;
+        }
+    }
+    
+    NSString *finalRecordInfo = [jsonString stringByAppendingString:@"\n"];
     if (![fileManager fileExistsAtPath:self.recorderFilePath]) {
         // 如果recordFile不存在，创建文件并写入首行，首次不上传
         [finalRecordInfo writeToFile:_recorderFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];

@@ -23,6 +23,13 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
+- (void)testConfigDefaultConfig {
+    QNConfiguration *cfg = [QNConfiguration buildV2:^(QNConfigurationBuilder *builder) {
+    }];
+    XCTAssertTrue(cfg.resumeUploadVersion == QNResumeUploadVersionV2, @"config default resumeUploadVersion error");
+}
+
+
 - (void)testGlobalDefaultConfig {
     QNGlobalConfiguration *cfg = [QNGlobalConfiguration shared];
     cfg.udpDnsIpv4Servers = nil;

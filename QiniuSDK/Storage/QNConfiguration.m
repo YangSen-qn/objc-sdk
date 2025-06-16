@@ -17,6 +17,43 @@ const UInt32 kQNBlockSize = 4 * 1024 * 1024;
 const UInt32 kQNDefaultDnsCacheTime = 2 * 60;
 
 
+@interface QNConfigurationBuilder()
+@end
+@implementation QNConfigurationBuilder
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _zone = [[QNAutoZone alloc] init];
+        _chunkSize = 2 * 1024 * 1024;
+        _putThreshold = 4 * 1024 * 1024;
+        _retryMax = 1;
+        _timeoutInterval = 90;
+        _retryInterval = 0.5;
+
+        _recorder = nil;
+        _recorderKeyGen = nil;
+
+        _proxy = nil;
+        _converter = nil;
+
+        _useHttps = YES;
+        _allowBackupHost = YES;
+        _accelerateUploading = NO;
+        _useConcurrentResumeUpload = NO;
+        _resumeUploadVersion = QNResumeUploadVersionV1;
+        _concurrentTaskCount = 3;
+    }
+    return self;
+}
+
++ (instancetype)defaultBuilder {
+    QNConfigurationBuilder *builder = [[QNConfigurationBuilder alloc] init];
+    builder.resumeUploadVersion = QNResumeUploadVersionV2;
+    return builder;
+}
+
+@end
+
 @implementation QNConfiguration
 
 + (instancetype)defaultConfiguration{
@@ -24,8 +61,19 @@ const UInt32 kQNDefaultDnsCacheTime = 2 * 60;
     return [[QNConfiguration alloc] initWithBuilder:builder];
 }
 
++ (instancetype)defaultConfigurationV2{
+    QNConfigurationBuilder *builder = [QNConfigurationBuilder defaultBuilder];
+    return [[QNConfiguration alloc] initWithBuilder:builder];
+}
+
 + (instancetype)build:(QNConfigurationBuilderBlock)block {
     QNConfigurationBuilder *builder = [[QNConfigurationBuilder alloc] init];
+    block(builder);
+    return [[QNConfiguration alloc] initWithBuilder:builder];
+}
+
++ (instancetype)buildV2:(QNConfigurationBuilderBlock)block {
+    QNConfigurationBuilder *builder = [QNConfigurationBuilder defaultBuilder];
     block(builder);
     return [[QNConfiguration alloc] initWithBuilder:builder];
 }
@@ -262,32 +310,4 @@ const UInt32 kQNDefaultDnsCacheTime = 2 * 60;
 
 @end
 
-@implementation QNConfigurationBuilder
-
-- (instancetype)init {
-    if (self = [super init]) {
-        _zone = [[QNAutoZone alloc] init];
-        _chunkSize = 2 * 1024 * 1024;
-        _putThreshold = 4 * 1024 * 1024;
-        _retryMax = 1;
-        _timeoutInterval = 90;
-        _retryInterval = 0.5;
-
-        _recorder = nil;
-        _recorderKeyGen = nil;
-
-        _proxy = nil;
-        _converter = nil;
-
-        _useHttps = YES;
-        _allowBackupHost = YES;
-        _accelerateUploading = NO;
-        _useConcurrentResumeUpload = NO;
-        _resumeUploadVersion = QNResumeUploadVersionV1;
-        _concurrentTaskCount = 3;
-    }
-    return self;
-}
-
-@end
 

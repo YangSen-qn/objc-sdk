@@ -45,7 +45,7 @@
 }
 
 - (void)testHttpGetByIP{
-    NSURL *url = [NSURL URLWithString:@"http://218.98.28.19/v3/query?ak=jH983zIUFIP1OVumiBVGeAfiLYJvwrF45S-t22eu&bucket=zone0-space"];
+    NSURL *url = [NSURL URLWithString:@"http://101.251.144.177/v3/query?ak=jH983zIUFIP1OVumiBVGeAfiLYJvwrF45S-t22eu&bucket=zone0-space"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.qn_domain = @"uc.qbox.me";
     
@@ -53,7 +53,7 @@
 }
 
 - (void)testHttpsGetByIP{
-    NSURL *url = [NSURL URLWithString:@"https://218.98.28.19/v3/query?ak=jH983zIUFIP1OVumiBVGeAfiLYJvwrF45S-t22eu&bucket=zone0-space"];
+    NSURL *url = [NSURL URLWithString:@"https://101.251.144.177/v3/query?ak=jH983zIUFIP1OVumiBVGeAfiLYJvwrF45S-t22eu&bucket=zone0-space"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.qn_domain = @"uc.qbox.me";
     

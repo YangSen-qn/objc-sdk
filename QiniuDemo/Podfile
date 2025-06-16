@@ -4,7 +4,7 @@ target "QiniuDemo" do
   platform :ios, "10.0"
 
 #  pod 'Qiniu', '~> 7.4.0'
-#  pod 'Qiniu', '7.1.7'
+#  pod 'Qiniu', '8.8.0'
   pod 'Qiniu',:path => '../'
   pod 'HappyDNS',:path => '../../happy-dns-objc'
   pod 'TZImagePickerController', '~> 3.8.7'

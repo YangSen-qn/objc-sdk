@@ -637,6 +637,7 @@
 		4551E55E24CE81DA00447285 /* QNInetAddress.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNInetAddress.m; sourceTree = "<group>"; };
 		4551E56524D0065100447285 /* NSData+QNMD5.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+QNMD5.h"; sourceTree = "<group>"; };
 		4551E56624D0065100447285 /* NSData+QNMD5.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+QNMD5.m"; sourceTree = "<group>"; };
+		45B03B702DF80281002148CE /* libHappyDNS-macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libHappyDNS-macOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45CBC6C22AA9B05A00962B47 /* QNFixZoneTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNFixZoneTest.m; sourceTree = "<group>"; };
 		45CBC6D02ABA9FFF00962B47 /* QNCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNCache.h; sourceTree = "<group>"; };
 		45CBC6D12ABA9FFF00962B47 /* QNCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNCache.m; sourceTree = "<group>"; };
@@ -954,6 +955,7 @@
 		A955AABD20BF51BFE5032419 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				45B03B702DF80281002148CE /* libHappyDNS-macOS.a */,
 				F14D0FE3BA304F86A17EDF33 /* libPods-QiniuSDK_Mac.a */,
 				D15EA855D2DBDE6728E87462 /* libPods-QiniuSDK_MacTests.a */,
 				43AF08370B1B79540BB41B4B /* libPods-QiniuSDK_iOS.a */,
