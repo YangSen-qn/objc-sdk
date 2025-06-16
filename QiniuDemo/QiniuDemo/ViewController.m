@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, UploadState){
     UploadStateUploading,
     UploadStateCancelling
 };
-@interface DnsItem : NSObject <QNIDnsNetworkAddress,TZImagePickerControllerDelegate>
+@interface DnsItem : NSObject <QNIDnsNetworkAddress>
 @property(nonatomic,   copy)NSString *hostValue;
 @property(nonatomic,   copy)NSString *ipValue;
 @property(nonatomic, strong)NSNumber *ttlValue;
@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, UploadState){
 @implementation DnsItem
 @end
 
-@interface ViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, QNDnsDelegate>
+@interface ViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, TZImagePickerControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIButton* chooseBtn;
 @property (nonatomic, weak) IBOutlet UIButton* uploadBtn;
@@ -144,7 +144,7 @@ typedef NS_ENUM(NSInteger, UploadState){
     self.token = @"5cJEzNSnh3PjOHZR_E0u1HCkXw4Bw1ZSuWQI9ufz:-ul1AJ8Fvpc7WhtpVT91Pvdfreo=:eyJzY29wZSI6InpvbmUwLXNwYWNlIiwiZGVhZGxpbmUiOjM0MzM3NDYyNTl9";
     
     
-    QNConfiguration *configuration = [QNConfiguration build:^(QNConfigurationBuilder *builder) {
+    QNConfiguration *configuration = [QNConfiguration buildV2:^(QNConfigurationBuilder *builder) {
         builder.timeoutInterval = 90;
         builder.retryMax = 1;
 //        builder.useHttps = NO;
@@ -255,7 +255,7 @@ typedef NS_ENUM(NSInteger, UploadState){
     option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
     
     __block PHAsset *phAsset = nil;
-    PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionSubtypeAny subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+    PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
     for (PHAssetCollection *collection in smartAlbums) {
         // 有可能是PHCollectionList类的的对象，过滤掉
         if (![collection isKindOfClass:[PHAssetCollection class]]) continue;
