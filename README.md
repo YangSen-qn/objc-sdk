@@ -14,7 +14,7 @@
 通过 CocoaPods
 
 ```ruby
-pod "Qiniu", "~> 8.9.2" 
+pod "Qiniu", "~> 8.9.3"
 ```
 
 通过 Swift Package Manager (Xcode 11+)
@@ -26,7 +26,7 @@ File -> Swift Packages -> Add Package Dependency，输入库链接，选择相�
 库对接:
 let package = Package(
     dependencies: [
-        .package(url: "https://github.com/qiniu/objc-sdk", from: "8.9.2")
+        .package(url: "https://github.com/qiniu/objc-sdk", from: "8.9.3")
     ],
     // ...
 )

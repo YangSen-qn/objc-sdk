@@ -365,7 +365,7 @@
 			repositoryURL = "https://github.com/qiniu/objc-sdk";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 8.9.2;
+				minimumVersion = 8.9.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
