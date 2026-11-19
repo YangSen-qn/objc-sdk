@@ -244,6 +244,43 @@
     XCTAssertEqual(self.callbackCount, 1);
 }
 
+// 重定向后的请求应继承原始 0.5 秒闲时超时，而不是恢复默认值。
+- (void)testRedirectPreservesIdleTimeout {
+    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer) {
+        struct sockaddr_in address = {0};
+        socklen_t addressLength = sizeof(address);
+        getsockname(peer, (struct sockaddr *)&address, &addressLength);
+        NSString *header = [NSString stringWithFormat:@"HTTP/1.1 302 Found\r\nLocation: http://127.0.0.1:%u/redirect-target\r\nContent-Length: 0\r\nConnection: close\r\n\r\n", ntohs(address.sin_port)];
+        NSData *data = [header dataUsingEncoding:NSUTF8StringEncoding];
+        send(peer, data.bytes, data.length, 0);
+        shutdown(peer, SHUT_WR);
+        fd_set readSet;
+        FD_ZERO(&readSet);
+        FD_SET(self.listenSocket, &readSet);
+        struct timeval deadline = {3, 0};
+        if (select(self.listenSocket + 1, &readSet, NULL, NULL, &deadline) > 0) {
+            int redirectedPeer = accept(self.listenSocket, NULL, NULL);
+            if (redirectedPeer >= 0) {
+                char buffer[4096];
+                struct timeval timeout = {2, 0};
+                setsockopt(redirectedPeer, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+                recv(redirectedPeer, buffer, sizeof(buffer), 0);
+                usleep(2000000);
+                close(redirectedPeer);
+            }
+        }
+    }];
+    self.outerClient = [[QNCFHttpClient alloc] init];
+    [self.outerClient request:request server:nil connectionProxy:@{} progress:nil complete:^(NSURLResponse *response, QNUploadSingleRequestMetrics *metrics, NSData *data, NSError *error) {
+        self.requestError = error;
+        self.callbackCount += 1;
+        [self.completion fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:1.5 handler:nil];
+    XCTAssertEqual(self.requestError.code, NSURLErrorTimedOut);
+    XCTAssertEqual(self.callbackCount, 1);
+}
+
 // 记录错误终态并通知测试等待者。
 - (void)onError:(NSError *)error {
     self.requestError = error;

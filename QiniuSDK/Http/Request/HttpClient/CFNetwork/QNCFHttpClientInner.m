@@ -287,6 +287,7 @@
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.HTTPMethod = @"GET";
+    request.timeoutInterval = self.request.timeoutInterval;
     [request setAllHTTPHeaderFields:requestHeader];
     NSURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:self.request.URL
                                                           statusCode:statusCode
