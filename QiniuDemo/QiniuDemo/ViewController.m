@@ -134,7 +134,6 @@ typedef NS_ENUM(NSInteger, UploadState){
 //    kQNGlobalConfiguration.dns = self;
     
 //    [QNServerConfigMonitor removeConfigCache];
-    [QNReportConfig sharedInstance].reportEnable = NO;
     
     kQNGlobalConfiguration.udpDnsIpv4Servers = @[@"223.5.5.5", @"114.114.114.114"];
     kQNGlobalConfiguration.dohIpv4Servers = @[@"https://223.6.6.6/dns-query"];
@@ -154,7 +153,7 @@ typedef NS_ENUM(NSInteger, UploadState){
         builder.resumeUploadVersion = QNResumeUploadVersionV2;
         builder.putThreshold = 4*1024*1024;
         builder.chunkSize = 5*1024*1024;
-//        builder.accelerateUploading = true;
+        builder.accelerateUploading = true;
 //        builder.zone = [[QNFixedZone alloc] initWithAccUpDomainList:@[@"zone0-space.kodo-accelerate.cn-east-1.qiniucs.com"]
 //                                                             upList:@[kUploadFixHost00]
 //                                                          oldUpList:@[]
@@ -180,18 +179,18 @@ typedef NS_ENUM(NSInteger, UploadState){
     }];
 
     // File
-    [upManager putFile:filePath key:key token:self.token complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
-        NSLog(@"info ===== %@", info);
-        NSLog(@"resp ===== %@", resp);
-
-        [weakSelf changeUploadState:UploadStatePrepare];
-        [weakSelf alertMessage:info.message];
-        
-        if (complete) {
-            complete();
-        }
-    }
-                option:uploadOption];
+//    [upManager putFile:filePath key:key token:self.token complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+//        NSLog(@"info ===== %@", info);
+//        NSLog(@"resp ===== %@", resp);
+//
+//        [weakSelf changeUploadState:UploadStatePrepare];
+//        [weakSelf alertMessage:info.message];
+//
+//        if (complete) {
+//            complete();
+//        }
+//    }
+//                option:uploadOption];
    
     // NSInputStream no size
 //    NSDate *startData = [NSDate date];
@@ -234,16 +233,16 @@ typedef NS_ENUM(NSInteger, UploadState){
     
     // PHAssetResource
     // 注意：这里可能还需要包括其他你需要的资源类型
-//    PHAssetResource *source = [PHAssetResource assetResourcesForAsset:self.pickFile].firstObject;
-//    [upManager putPHAssetResource:source key:source.assetLocalIdentifier token:self.token complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
-//        NSLog(@"info ===== %@", info);
-//        NSLog(@"resp ===== %@", resp);
-//        NSLog(@"key  ===== %@", self.pickFile.burstIdentifier);
-//
-//        [weakSelf changeUploadState:UploadStatePrepare];
-//        [weakSelf alertMessage:info.message];
-//        
-//    } option:uploadOption];
+    PHAssetResource *source = [PHAssetResource assetResourcesForAsset:self.pickFile].firstObject;
+    [upManager putPHAssetResource:source key:source.assetLocalIdentifier token:self.token complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+        NSLog(@"info ===== %@", info);
+        NSLog(@"resp ===== %@", resp);
+        NSLog(@"key  ===== %@", self.pickFile.burstIdentifier);
+
+        [weakSelf changeUploadState:UploadStatePrepare];
+        [weakSelf alertMessage:info.message];
+
+    } option:uploadOption];
     
     
 }
@@ -341,18 +340,6 @@ typedef NS_ENUM(NSInteger, UploadState){
         item.sourceValue = @"custom";
         [array addObject:item];
     } else if ([host containsString:kUploadFixHost00]) {
-        DnsItem *item = [[DnsItem alloc] init];
-        item.hostValue = host;
-        item.ipValue = @"220.181.38.148";
-        item.sourceValue = @"custom";
-        [array addObject:item];
-        
-        item = [[DnsItem alloc] init];
-        item.hostValue = host;
-        item.ipValue = @"180.101.136.28";
-        item.sourceValue = @"custom";
-        [array addObject:item];
-    } else if ([host containsString:@"upload.qiniup.com"]) {
         DnsItem *item = [[DnsItem alloc] init];
         item.hostValue = host;
         item.ipValue = @"220.181.38.148";
