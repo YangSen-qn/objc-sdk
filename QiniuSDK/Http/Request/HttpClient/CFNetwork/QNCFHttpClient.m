@@ -52,7 +52,7 @@ connectionProxy:(NSDictionary *)connectionProxy
        progress:(void (^)(long long, long long))progress
        complete:(QNRequestClientCompleteHandler)complete {
     
-    self.thread = [[QNCFHttpThreadPool shared] getOneThread];
+    QNCFHttpThread *thread = [[QNCFHttpThreadPool shared] getOneThread];
     // 有 ip 才会使用
     if (server && server.ip.length > 0 && server.host.length > 0) {
         NSString *urlString = request.URL.absoluteString;
@@ -75,22 +75,32 @@ connectionProxy:(NSDictionary *)connectionProxy
     [self.requestMetrics start];
     
     self.responseData = [NSMutableData data];
-    self.httpClient = [QNCFHttpClientInner client:self.request connectionProxy:connectionProxy];
-    self.httpClient.delegate = self;
-    [self.httpClient performSelector:@selector(main)
-                            onThread:self.thread
-                          withObject:nil
-                       waitUntilDone:NO];
+    QNCFHttpClientInner *httpClient = [QNCFHttpClientInner client:self.request connectionProxy:connectionProxy];
+    httpClient.delegate = self;
+    @synchronized (self) {
+        self.thread = thread;
+        self.httpClient = httpClient;
+        [httpClient performSelector:@selector(main)
+                           onThread:thread
+                         withObject:nil
+                      waitUntilDone:NO];
+    }
 }
 
 // 将取消操作投递到流所属线程，没有活动请求时直接返回。
 - (void)cancel {
-    if (!self.thread || !self.httpClient) {
+    QNCFHttpThread *thread;
+    QNCFHttpClientInner *httpClient;
+    @synchronized (self) {
+        thread = self.thread;
+        httpClient = self.httpClient;
+    }
+    if (!thread || !httpClient) {
         return;
     }
     
-    [self.httpClient performSelector:@selector(cancel)
-                            onThread:self.thread
+    [httpClient performSelector:@selector(cancel)
+                       onThread:thread
                           withObject:nil
                        waitUntilDone:NO];
 }
@@ -152,6 +162,11 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
 - (void)redirectedToRequest:(nonnull NSURLRequest *)request redirectResponse:(nonnull NSURLResponse *)redirectResponse {
     if (self.redirectCount < self.maxRedirectCount) {
         self.redirectCount += 1;
+        QNCFHttpThread *oldThread;
+        @synchronized (self) {
+            oldThread = self.thread;
+        }
+        [[QNCFHttpThreadPool shared] subtractOperationCountOfThread:oldThread];
         [self request:request server:nil connectionProxy:self.connectionProxy progress:self.progress complete:self.complete];
     } else {
         [self didFinish];

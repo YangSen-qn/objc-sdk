@@ -37,7 +37,7 @@
     if (!request) {
         return nil;
     }
-    QNCFHttpClientInner *client = [[QNCFHttpClientInner alloc] init];
+    QNCFHttpClientInner *client = [[self alloc] init];
     client.connectionProxy = connectionProxy;
     client.request = [request mutableCopy];
     client.isCompleted = false;
@@ -50,6 +50,10 @@
         return;
     }
     [self prepare];
+    if (self.inputStream == nil) {
+        [self finishWithError:[self createError:kQNNetworkError errorDescription:@"create input stream failed"]];
+        return;
+    }
     self.lastActivityTime = [NSProcessInfo processInfo].systemUptime;
     [self startProgress];
     [self openInputStream];
@@ -211,20 +215,28 @@
     CFRelease(httpMessage);
 }
 
-// 每次实际读到响应体才刷新活动时间，持续接收不能被误判为空闲。
+// 读取一次响应体并刷新活动时间，后续可读事件继续驱动读取。
 - (void)inputStreamGetAndNotifyHttpData{
     UInt8 buffer[16 * 1024];
-    while (self.inputStream.hasBytesAvailable && !self.isCallFinishOrError) {
-        NSInteger amount = [self.inputStream read:buffer maxLength:sizeof(buffer)];
-        if (amount <= 0) {
-            if (amount < 0) {
-                [self finishWithError:[self translateCFNetworkErrorIntoUrlError:self.inputStream.streamError]];
-            }
-            return;
+    if (!self.inputStream.hasBytesAvailable || self.isCallFinishOrError) {
+        return;
+    }
+    NSInteger amount = [self.inputStream read:buffer maxLength:sizeof(buffer)];
+    if (amount <= 0) {
+        if (amount < 0) {
+            [self finishWithError:[self translateCFNetworkErrorIntoUrlError:self.inputStream.streamError]];
         }
-        self.lastActivityTime = [NSProcessInfo processInfo].systemUptime;
-        NSData *data = [[NSData alloc] initWithBytes:buffer length:amount];
-        [self delegate_didLoadData:data];
+        return;
+    }
+    self.lastActivityTime = [NSProcessInfo processInfo].systemUptime;
+    NSData *data = [[NSData alloc] initWithBytes:buffer length:amount];
+    [self delegate_didLoadData:data];
+}
+
+// 流结束时排空已经缓冲的响应体，避免末尾数据丢失。
+- (void)inputStreamDrainRemainingData {
+    while (self.inputStream.hasBytesAvailable && !self.isCallFinishOrError) {
+        [self inputStreamGetAndNotifyHttpData];
     }
 }
 
@@ -294,7 +306,13 @@
                                                          HTTPVersion:httpVersionString
                                                         headerFields:headInfo];
 
-    self.isCallFinishOrError = YES;
+    @synchronized (self) {
+        if (self.isCallFinishOrError) {
+            CFRelease(responseMessage);
+            return;
+        }
+        self.isCallFinishOrError = YES;
+    }
     [self releaseResource];
     [self delegate_redirectedToRequest:request redirectResponse:response];
     
@@ -331,7 +349,7 @@
                 } else {
                     
                     [self inputStreamGetAndNotifyHttpResponse];
-                    [self inputStreamGetAndNotifyHttpData];
+                    [self inputStreamDrainRemainingData];
 
                     [self finishWithError:nil];
                 }
@@ -404,8 +422,7 @@
         [self delegate_didSendBodyData:bytesSent
                         totalBytesSent:self.totalBytesSent
               totalBytesExpectedToSend:self.totalBytesExpectedToSend];
-    }
-    if (self.request.timeoutInterval > 0 &&
+    } else if (self.request.timeoutInterval > 0 &&
         [NSProcessInfo processInfo].systemUptime - self.lastActivityTime >= self.request.timeoutInterval) {
         NSError *error = [NSError errorWithDomain:NSURLErrorDomain
                                              code:NSURLErrorTimedOut
@@ -416,7 +433,7 @@
 
 - (NSError *)translateCFNetworkErrorIntoUrlError:(NSError *)cfError{
     if (cfError == nil) {
-        return nil;
+        return [self createError:kQNNetworkError errorDescription:@"stream error without details"];
     }
     
     NSInteger errorCode = kQNNetworkError;

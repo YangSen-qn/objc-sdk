@@ -17,6 +17,23 @@
 #import <sys/socket.h>
 #import <unistd.h>
 
+@interface QNCFHttpClientInner (TestPrivate)
+- (NSInputStream *)createInputStream:(NSURLRequest *)urlRequest;
+- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode;
+@end
+
+@interface QNNilInputStreamClient : QNCFHttpClientInner
+@end
+
+@implementation QNNilInputStreamClient
+
+// 测试底层流创建失败时是否能进入错误终态。
+- (NSInputStream *)createInputStream:(NSURLRequest *)urlRequest {
+    return nil;
+}
+
+@end
+
 @interface QNCFHttpClientTest : XCTestCase
 
 @property(nonatomic, strong)QNCFHttpClient *client;
@@ -63,7 +80,7 @@
 }
 
 // 创建接收单个请求的本机服务，处理函数控制响应和关闭时机。
-- (NSURLRequest *)requestWithTimeout:(NSTimeInterval)timeout handler:(void (^)(int))handler {
+- (NSURLRequest *)requestWithTimeout:(NSTimeInterval)timeout handler:(void (^)(int, int))handler {
     self.completion = [self expectationWithDescription:@"request completed"];
     self.listenSocket = socket(AF_INET, SOCK_STREAM, 0);
     XCTAssertGreaterThanOrEqual(self.listenSocket, 0);
@@ -96,7 +113,7 @@
                 }
                 [requestData appendBytes:&buffer length:length];
             }
-            handler(peer);
+            handler(peer, listener);
             close(peer);
         }
         dispatch_semaphore_signal(finished);
@@ -105,6 +122,65 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.timeoutInterval = timeout;
     return request;
+}
+
+// 返回跨线程共享的错误状态快照。
+- (NSError *)requestErrorSnapshot {
+    @synchronized (self) {
+        return self.requestError;
+    }
+}
+
+// 返回跨线程共享的回调次数快照。
+- (NSInteger)callbackCountSnapshot {
+    @synchronized (self) {
+        return self.callbackCount;
+    }
+}
+
+// 返回跨线程共享的响应数据快照。
+- (NSData *)receivedDataSnapshot {
+    @synchronized (self) {
+        return [self.receivedData copy];
+    }
+}
+
+// 返回跨线程共享的发送进度次数快照。
+- (NSInteger)sendProgressCountSnapshot {
+    @synchronized (self) {
+        return self.sendProgressCount;
+    }
+}
+
+// 返回跨线程共享的已发送字节数快照。
+- (int64_t)lastBytesSentSnapshot {
+    @synchronized (self) {
+        return self.lastBytesSent;
+    }
+}
+
+// 验证流错误事件缺少错误对象时仍回调失败。
+- (void)testStreamErrorWithoutDetailsFails {
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://127.0.0.1:1"]];
+    QNCFHttpClientInner *client = [QNCFHttpClientInner client:request connectionProxy:@{}];
+    client.delegate = self;
+    NSInputStream *stream = [NSInputStream inputStreamWithData:[NSData data]];
+    [stream open];
+    [client setValue:stream forKey:@"inputStream"];
+    [client stream:stream handleEvent:NSStreamEventErrorOccurred];
+    XCTAssertNotNil([self requestErrorSnapshot]);
+    XCTAssertEqual([self callbackCountSnapshot], 1);
+}
+
+// 验证底层流创建失败时不会遗留定时器。
+- (void)testNilInputStreamFailsWithoutTimer {
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://127.0.0.1:1"]];
+    QNNilInputStreamClient *client = [QNNilInputStreamClient client:request connectionProxy:@{}];
+    client.delegate = self;
+    [client main];
+    XCTAssertNotNil([self requestErrorSnapshot]);
+    XCTAssertEqual([self callbackCountSnapshot], 1);
+    XCTAssertNil([client valueForKey:@"progressTimer"]);
 }
 
 // 在当前运行循环启动请求流，以便测试真实流事件和定时器。
@@ -116,22 +192,23 @@
 
 // 服务端持续无响应时必须超时，关闭连接后不得再次回调。
 - (void)testNoResponseTimesOutOnce {
-    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer) {
+    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer, int listener) {
         usleep(1500000);
     }];
     [self startInnerRequest:request];
     [self waitForExpectationsWithTimeout:3 handler:nil];
-    XCTAssertEqualObjects(self.requestError.domain, NSURLErrorDomain);
-    XCTAssertEqual(self.requestError.code, NSURLErrorTimedOut);
+    NSError *error = [self requestErrorSnapshot];
+    XCTAssertEqualObjects(error.domain, NSURLErrorDomain);
+    XCTAssertEqual(error.code, NSURLErrorTimedOut);
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.9]];
-    XCTAssertEqual(self.callbackCount, 1);
+    XCTAssertEqual([self callbackCountSnapshot], 1);
     XCTAssertNil([self.innerClient valueForKey:@"inputStream"]);
     XCTAssertNil([self.innerClient valueForKey:@"progressTimer"]);
 }
 
 // 总耗时超过超时时长但持续收取响应体时，应完整成功。
 - (void)testContinuousResponseDoesNotTimeOut {
-    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer) {
+    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer, int listener) {
         const char *header = "HTTP/1.1 200 OK\r\nContent-Length: 65536\r\nConnection: close\r\n\r\n";
         send(peer, header, strlen(header), 0);
         char chunk[8192];
@@ -143,30 +220,30 @@
     }];
     [self startInnerRequest:request];
     [self waitForExpectationsWithTimeout:4 handler:nil];
-    XCTAssertNil(self.requestError);
-    XCTAssertEqual(self.receivedData.length, 65536);
-    XCTAssertEqual(self.callbackCount, 1);
+    XCTAssertNil([self requestErrorSnapshot]);
+    XCTAssertEqual([self receivedDataSnapshot].length, 65536);
+    XCTAssertEqual([self callbackCountSnapshot], 1);
 }
 
 // 收到响应头和部分数据后停止传输，也应触发空闲超时。
 - (void)testStalledResponseBodyTimesOut {
-    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer) {
+    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer, int listener) {
         const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 4\r\n\r\nab";
         send(peer, response, strlen(response), 0);
         usleep(1500000);
     }];
     [self startInnerRequest:request];
     [self waitForExpectationsWithTimeout:3 handler:nil];
-    XCTAssertEqual(self.requestError.code, NSURLErrorTimedOut);
-    XCTAssertEqualObjects(self.receivedData, [@"ab" dataUsingEncoding:NSUTF8StringEncoding]);
-    XCTAssertEqual(self.callbackCount, 1);
+    XCTAssertEqual([self requestErrorSnapshot].code, NSURLErrorTimedOut);
+    XCTAssertEqualObjects([self receivedDataSnapshot], [@"ab" dataUsingEncoding:NSUTF8StringEncoding]);
+    XCTAssertEqual([self callbackCountSnapshot], 1);
 }
 
 // 服务端持续慢速读取请求体时，发送活动应刷新空闲时间。
 - (void)testContinuousUploadDoesNotTimeOut {
     const NSUInteger bodySize = 4 * 1024 * 1024;
     __block NSUInteger receivedBytes = 0;
-    NSMutableURLRequest *request = [[self requestWithTimeout:1 handler:^(int peer) {
+    NSMutableURLRequest *request = [[self requestWithTimeout:1 handler:^(int peer, int listener) {
         char buffer[64 * 1024];
         while (receivedBytes < bodySize) {
             ssize_t length = recv(peer, buffer, MIN(sizeof(buffer), bodySize - receivedBytes), 0);
@@ -184,16 +261,16 @@
     NSTimeInterval start = [NSProcessInfo processInfo].systemUptime;
     [self startInnerRequest:request];
     [self waitForExpectationsWithTimeout:15 handler:nil];
-    XCTAssertNil(self.requestError);
+    XCTAssertNil([self requestErrorSnapshot]);
     XCTAssertEqual(receivedBytes, bodySize);
-    XCTAssertGreaterThan(self.sendProgressCount, 1);
+    XCTAssertGreaterThan([self sendProgressCountSnapshot], 1);
     XCTAssertGreaterThan([NSProcessInfo processInfo].systemUptime - start, request.timeoutInterval);
-    XCTAssertEqual(self.callbackCount, 1);
+    XCTAssertEqual([self callbackCountSnapshot], 1);
 }
 
 // 请求体尚未发完就停止被读取时，应在发送阶段超时并只回调一次。
 - (void)testStalledUploadTimesOut {
-    NSMutableURLRequest *request = [[self requestWithTimeout:1 handler:^(int peer) {
+    NSMutableURLRequest *request = [[self requestWithTimeout:1 handler:^(int peer, int listener) {
         char buffer[1024];
         recv(peer, buffer, sizeof(buffer), 0);
         usleep(3000000);
@@ -202,18 +279,18 @@
     request.HTTPBody = [NSMutableData dataWithLength:8 * 1024 * 1024];
     [self startInnerRequest:request];
     [self waitForExpectationsWithTimeout:5 handler:nil];
-    XCTAssertEqual(self.requestError.code, NSURLErrorTimedOut);
-    XCTAssertGreaterThan(self.lastBytesSent, 0);
-    XCTAssertLessThan(self.lastBytesSent, request.HTTPBody.length);
+    XCTAssertEqual([self requestErrorSnapshot].code, NSURLErrorTimedOut);
+    XCTAssertGreaterThan([self lastBytesSentSnapshot], 0);
+    XCTAssertLessThan([self lastBytesSentSnapshot], request.HTTPBody.length);
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.8]];
-    XCTAssertEqual(self.callbackCount, 1);
+    XCTAssertEqual([self callbackCountSnapshot], 1);
     XCTAssertNil([self.innerClient valueForKey:@"inputStream"]);
     XCTAssertNil([self.innerClient valueForKey:@"progressTimer"]);
 }
 
 // 先正常完成后，超时检查和主动取消都不能产生第二次回调。
 - (void)testSuccessStopsTimeoutTimer {
-    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer) {
+    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer, int listener) {
         const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nok";
         send(peer, response, strlen(response), 0);
     }];
@@ -221,32 +298,34 @@
     [self waitForExpectationsWithTimeout:3 handler:nil];
     [self.innerClient cancel];
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.8]];
-    XCTAssertNil(self.requestError);
-    XCTAssertEqual(self.callbackCount, 1);
+    XCTAssertNil([self requestErrorSnapshot]);
+    XCTAssertEqual([self callbackCountSnapshot], 1);
     XCTAssertNil([self.innerClient valueForKey:@"progressTimer"]);
 }
 
 // 外层取消必须投递到活动线程，且之后不能再报空闲超时。
 - (void)testOuterCancelCompletesOnce {
-    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer) {
+    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer, int listener) {
         usleep(1500000);
     }];
     self.outerClient = [[QNCFHttpClient alloc] init];
     [self.outerClient request:request server:nil connectionProxy:@{} progress:nil complete:^(NSURLResponse *response, QNUploadSingleRequestMetrics *metrics, NSData *data, NSError *error) {
-        self.requestError = error;
-        self.callbackCount += 1;
+        @synchronized (self) {
+            self.requestError = error;
+            self.callbackCount += 1;
+        }
         [self.completion fulfill];
     }];
     [self.outerClient performSelector:@selector(cancel) withObject:nil afterDelay:0.1];
     [self waitForExpectationsWithTimeout:3 handler:nil];
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.8]];
-    XCTAssertEqual(self.requestError.code, NSURLErrorCancelled);
-    XCTAssertEqual(self.callbackCount, 1);
+    XCTAssertEqual([self requestErrorSnapshot].code, NSURLErrorCancelled);
+    XCTAssertEqual([self callbackCountSnapshot], 1);
 }
 
 // 重定向后的请求应继承原始 0.5 秒闲时超时，而不是恢复默认值。
 - (void)testRedirectPreservesIdleTimeout {
-    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer) {
+    NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer, int listener) {
         struct sockaddr_in address = {0};
         socklen_t addressLength = sizeof(address);
         getsockname(peer, (struct sockaddr *)&address, &addressLength);
@@ -256,10 +335,10 @@
         shutdown(peer, SHUT_WR);
         fd_set readSet;
         FD_ZERO(&readSet);
-        FD_SET(self.listenSocket, &readSet);
+        FD_SET(listener, &readSet);
         struct timeval deadline = {3, 0};
-        if (select(self.listenSocket + 1, &readSet, NULL, NULL, &deadline) > 0) {
-            int redirectedPeer = accept(self.listenSocket, NULL, NULL);
+        if (select(listener + 1, &readSet, NULL, NULL, &deadline) > 0) {
+            int redirectedPeer = accept(listener, NULL, NULL);
             if (redirectedPeer >= 0) {
                 char buffer[4096];
                 struct timeval timeout = {2, 0};
@@ -272,33 +351,41 @@
     }];
     self.outerClient = [[QNCFHttpClient alloc] init];
     [self.outerClient request:request server:nil connectionProxy:@{} progress:nil complete:^(NSURLResponse *response, QNUploadSingleRequestMetrics *metrics, NSData *data, NSError *error) {
-        self.requestError = error;
-        self.callbackCount += 1;
+        @synchronized (self) {
+            self.requestError = error;
+            self.callbackCount += 1;
+        }
         [self.completion fulfill];
     }];
     [self waitForExpectationsWithTimeout:1.5 handler:nil];
-    XCTAssertEqual(self.requestError.code, NSURLErrorTimedOut);
-    XCTAssertEqual(self.callbackCount, 1);
+    XCTAssertEqual([self requestErrorSnapshot].code, NSURLErrorTimedOut);
+    XCTAssertEqual([self callbackCountSnapshot], 1);
 }
 
 // 记录错误终态并通知测试等待者。
 - (void)onError:(NSError *)error {
-    self.requestError = error;
-    self.callbackCount += 1;
+    @synchronized (self) {
+        self.requestError = error;
+        self.callbackCount += 1;
+    }
     [self.completion fulfill];
 }
 
 // 记录成功终态并通知测试等待者。
 - (void)didFinish {
-    self.callbackCount += 1;
+    @synchronized (self) {
+        self.callbackCount += 1;
+    }
     [self.completion fulfill];
 }
 
 // 记录实际发送进度，区分发送停滞和发完后的等待响应。
 - (void)didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)expected {
     if (bytesSent > 0) {
-        self.sendProgressCount += 1;
-        self.lastBytesSent = totalBytesSent;
+        @synchronized (self) {
+            self.sendProgressCount += 1;
+            self.lastBytesSent = totalBytesSent;
+        }
     }
 }
 
@@ -308,7 +395,9 @@
 
 // 累计响应体，验证分段读取和超时前的已收数据。
 - (void)didLoadData:(NSData *)data {
-    [self.receivedData appendData:data];
+    @synchronized (self) {
+        [self.receivedData appendData:data];
+    }
 }
 
 // 本机服务不产生重定向。
