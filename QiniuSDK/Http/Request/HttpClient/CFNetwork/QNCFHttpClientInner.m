@@ -236,9 +236,10 @@
 
 // 流结束时排空已经缓冲的响应体，避免末尾数据丢失。
 - (void)inputStreamDrainRemainingData {
-    while ([self inputStreamGetAndNotifyHttpData]) {
-        // 上一次读到数据才继续读取。
-    }
+    BOOL didReadData;
+    do {
+        didReadData = [self inputStreamGetAndNotifyHttpData];
+    } while (didReadData);
 }
 
 - (BOOL)isInputStreamHttpResponseHeaderComplete{
