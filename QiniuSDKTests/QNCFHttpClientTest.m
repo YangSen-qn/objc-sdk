@@ -20,6 +20,7 @@
 @interface QNCFHttpClientInner (TestPrivate)
 - (NSInputStream *)createInputStream:(NSURLRequest *)urlRequest;
 - (void)inputStreamDrainRemainingData;
+- (void)timerAction;
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode;
 @end
 
@@ -220,6 +221,36 @@
     [self.innerClient main];
 }
 
+// 将最后活动时间设在 0.8 秒前，模拟超过 0.5 秒空闲阈值后首次检查。
+- (QNCFHttpClientInner *)idleClientWithResponseData:(NSData *)data {
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://127.0.0.1"]];
+    request.timeoutInterval = 0.5;
+    QNCFHttpClientInner *client = [QNCFHttpClientInner client:request connectionProxy:@{}];
+    client.delegate = self;
+    NSInputStream *stream = [NSInputStream inputStreamWithData:data];
+    [stream open];
+    [client setValue:stream forKey:@"inputStream"];
+    NSTimeInterval lastActivity = [NSProcessInfo processInfo].systemUptime - 0.8;
+    [client setValue:@(lastActivity) forKey:@"lastActivityTime"];
+    return client;
+}
+
+// 没有待收数据时，第一次超限检查就应结束请求。
+- (void)testIdleStreamWithoutBytesTimesOutOnFirstCheck {
+    QNCFHttpClientInner *client = [self idleClientWithResponseData:[NSData data]];
+    [client timerAction];
+    XCTAssertEqual([self requestErrorSnapshot].code, NSURLErrorTimedOut);
+    XCTAssertEqual([self callbackCountSnapshot], 1);
+}
+
+// 响应数据已就绪但尚未读取，超过阈值后首次检查就应超时。
+- (void)testIdleReadableStreamTimesOutOnFirstCheck {
+    QNCFHttpClientInner *client = [self idleClientWithResponseData:[@"a" dataUsingEncoding:NSUTF8StringEncoding]];
+    [client timerAction];
+    XCTAssertEqual([self requestErrorSnapshot].code, NSURLErrorTimedOut);
+    XCTAssertEqual([self callbackCountSnapshot], 1);
+}
+
 // 服务端持续无响应时必须超时，关闭连接后不得再次回调。
 - (void)testNoResponseTimesOutOnce {
     NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer, int listener) {
@@ -236,7 +267,7 @@
     XCTAssertNil([self.innerClient valueForKey:@"progressTimer"]);
 }
 
-// 总耗时超过超时时长但持续收取响应体时，应完整成功。
+// 总耗时超过空闲阈值但持续读到响应数据时，应收到完整响应。
 - (void)testContinuousResponseDoesNotTimeOut {
     NSURLRequest *request = [self requestWithTimeout:0.5 handler:^(int peer, int listener) {
         const char *header = "HTTP/1.1 200 OK\r\nContent-Length: 65536\r\nConnection: close\r\n\r\n";
@@ -248,9 +279,11 @@
             send(peer, chunk, sizeof(chunk), 0);
         }
     }];
+    NSTimeInterval start = [NSProcessInfo processInfo].systemUptime;
     [self startInnerRequest:request];
     [self waitForExpectationsWithTimeout:4 handler:nil];
     XCTAssertNil([self requestErrorSnapshot]);
+    XCTAssertGreaterThan([NSProcessInfo processInfo].systemUptime - start, request.timeoutInterval);
     XCTAssertEqual([self receivedDataSnapshot].length, 65536);
     XCTAssertEqual([self callbackCountSnapshot], 1);
 }
