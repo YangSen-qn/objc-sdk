@@ -19,6 +19,7 @@
 
 @interface QNCFHttpClientInner (TestPrivate)
 - (NSInputStream *)createInputStream:(NSURLRequest *)urlRequest;
+- (void)inputStreamDrainRemainingData;
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode;
 @end
 
@@ -30,6 +31,25 @@
 // 测试底层流创建失败时是否能进入错误终态。
 - (NSInputStream *)createInputStream:(NSURLRequest *)urlRequest {
     return nil;
+}
+
+@end
+
+@interface QNZeroReadInputStream : NSInputStream
+@property(nonatomic, assign)NSInteger readCount;
+@end
+
+@implementation QNZeroReadInputStream
+
+// 首次读到零字节后仍报告可读，最多允许两次读取以避免回归时挂起。
+- (BOOL)hasBytesAvailable {
+    return self.readCount < 2;
+}
+
+// 返回零字节，验证排空逻辑不会重复读取。
+- (NSInteger)read:(uint8_t *)buffer maxLength:(NSUInteger)len {
+    self.readCount += 1;
+    return 0;
 }
 
 @end
@@ -181,6 +201,16 @@
     XCTAssertNotNil([self requestErrorSnapshot]);
     XCTAssertEqual([self callbackCountSnapshot], 1);
     XCTAssertNil([client valueForKey:@"progressTimer"]);
+}
+
+// 可读标记为真但读取返回零字节时，排空逻辑必须及时退出。
+- (void)testDrainStopsWhenReadReturnsZero {
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://127.0.0.1:1"]];
+    QNCFHttpClientInner *client = [QNCFHttpClientInner client:request connectionProxy:@{}];
+    QNZeroReadInputStream *stream = [QNZeroReadInputStream new];
+    [client setValue:stream forKey:@"inputStream"];
+    [client inputStreamDrainRemainingData];
+    XCTAssertEqual(stream.readCount, 1);
 }
 
 // 在当前运行循环启动请求流，以便测试真实流事件和定时器。

@@ -215,28 +215,29 @@
     CFRelease(httpMessage);
 }
 
-// 读取一次响应体并刷新活动时间，后续可读事件继续驱动读取。
-- (void)inputStreamGetAndNotifyHttpData{
+// 读取一次响应体并刷新活动时间，返回本次是否读到数据。
+- (BOOL)inputStreamGetAndNotifyHttpData{
     UInt8 buffer[16 * 1024];
-    if (!self.inputStream.hasBytesAvailable || self.isCallFinishOrError) {
-        return;
+    if (self.isCallFinishOrError || !self.inputStream.hasBytesAvailable) {
+        return NO;
     }
     NSInteger amount = [self.inputStream read:buffer maxLength:sizeof(buffer)];
     if (amount <= 0) {
         if (amount < 0) {
             [self finishWithError:[self translateCFNetworkErrorIntoUrlError:self.inputStream.streamError]];
         }
-        return;
+        return NO;
     }
     self.lastActivityTime = [NSProcessInfo processInfo].systemUptime;
     NSData *data = [[NSData alloc] initWithBytes:buffer length:amount];
     [self delegate_didLoadData:data];
+    return YES;
 }
 
 // 流结束时排空已经缓冲的响应体，避免末尾数据丢失。
 - (void)inputStreamDrainRemainingData {
-    while (self.inputStream.hasBytesAvailable && !self.isCallFinishOrError) {
-        [self inputStreamGetAndNotifyHttpData];
+    while ([self inputStreamGetAndNotifyHttpData]) {
+        // 上一次读到数据才继续读取。
     }
 }
 
